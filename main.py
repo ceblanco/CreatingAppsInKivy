@@ -69,7 +69,8 @@ class CurrentWeather(BoxLayout):
         self.temp_max = data['main']['temp_max']
 
 class WeatherApp(App):
-    pass
+    def on_pause(self):
+        return True
 
 if __name__ == "__main__":
     WeatherApp().run()
