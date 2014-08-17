@@ -1,6 +1,6 @@
 import json
 from kivy.app import App
-#from kivy.factory import Factory
+from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from kivy.network.urlrequest import UrlRequest
@@ -51,7 +51,7 @@ class AddLocationForm(BoxLayout):
 
 class CurrentWeather(BoxLayout):
     location = ListProperty(['Long Beach', 'US'])
-    conditions = StringProperty()
+    conditions = ObjectProperty()
     temp = NumericProperty()
     temp_min = NumericProperty()
     temp_max = NumericProperty()
@@ -63,10 +63,20 @@ class CurrentWeather(BoxLayout):
 
     def weather_retrieved(self, request, data):
         data = json.loads(data.decode()) if not isinstance(data, dict) else data
-        self.conditions = data['weather'][0]['description']
+        #self.conditions = data['weather'][0]['description']
+        self.render_conditions(data['weather'][0]['description'])
         self.temp = data['main']['temp']
         self.temp_min = data['main']['temp_min']
         self.temp_max = data['main']['temp_max']
+
+    def render_conditions(self, conditions_description):
+        if "clear" in conditions_description.lower():
+            conditions_widget = Factory.ClearConditions()
+        else:
+            conditions_widget = Factory.UnknownConditions()
+        conditions_widget.conditions = conditions_description
+        self.conditions.clear_widgets()
+        self.conditions.add_widget(conditions_widget)
 
 class WeatherApp(App):
     def on_pause(self):
