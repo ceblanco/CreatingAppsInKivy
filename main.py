@@ -82,5 +82,8 @@ class WeatherApp(App):
     def on_pause(self):
         return True
 
+class Conditions(BoxLayout):
+    conditions = StringProperty()
+
 if __name__ == "__main__":
     WeatherApp().run()
