@@ -6,20 +6,16 @@ WeatherRoot:
 <WeatherRoot>:
     AddLocationForm
 
-<UnknownConditions@BoxLayout>:
-    conditions: ""
-    canvas:
+<UnknownConditions@Conditions>:
+    canvas.before:
         Color:
             rgb: [0.2, 0.2, 0.2]
         Ellipse:
             pos: self.pos
             size: self.size
-    Label:
-        text: root.conditions
 
-<ClearConditions@BoxLayout>:
-    conditions: ""
-    canvas:
+<ClearConditions@Conditions>:
+    canvas.before:
         Color:
             rgb: [0.8, 0.7, 0.3]
         Line:
@@ -59,8 +55,6 @@ WeatherRoot:
         Ellipse:
             pos: self.center_x - ((self.height - 40) / 2), self.pos[1] + 20
             size: [self.height - 40, self.height - 40]
-    Label:
-        text: root.conditions
 
 <AddLocationForm>:
     orientation: "vertical"
@@ -126,3 +120,7 @@ WeatherRoot:
             on_press: app.root.show_add_location_form()
         Button:
             text: "Forecast"
+
+<Conditions>:
+    Label: 
+        text: root.conditions
