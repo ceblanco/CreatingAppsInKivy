@@ -1,21 +1,36 @@
 import json
 from kivy.app import App
-#from kivy.factory import Factory
+from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.network.urlrequest import UrlRequest
 from kivy.uix.listview import ListItemButton
 from kivy.properties import ObjectProperty, ListProperty, StringProperty, NumericProperty
 
+def locations_args_converter(index, data_item):
+    city, country = data_item
+    return {'location': (city, country)}
+
+class LocationButton(ListItemButton):
+    location = ListProperty()
+
 class WeatherRoot(BoxLayout):
     current_weather = ObjectProperty()
+    locations = ObjectProperty()
 
     def show_current_weather(self, location=None):
         self.clear_widgets()
 
         if self.current_weather is None:
             self.current_weather = CurrentWeather()
+        if self.locations is None:
+            self.locations = Factory.Locations()
+
         if location is not None:
             self.current_weather.location = location
+            if location not in self.locations.locations_list.adapter.data:
+                self.locations.locations_list.adapter.data.append(location)
+                self.locations.locations_list._trigger_reset_populate()
+
         self.current_weather.update_weather()
         self.add_widget(self.current_weather)
 
@@ -23,11 +38,16 @@ class WeatherRoot(BoxLayout):
         self.clear_widgets()
         self.add_widget(AddLocationForm())
 
+    def show_locations(self):
+        self.clear_widgets()
+        self.add_widget(self.locations)
+
 class LocationButton(ListItemButton):
     location = ListProperty()
 
 class AddLocationForm(BoxLayout):
     search_input = ObjectProperty()
+    search_results = ObjectProperty()
 
     def search_location(self):
         search_template = "http://api.openweathermap.org/data/2.5/find?q={}&type=like"
@@ -43,10 +63,6 @@ class AddLocationForm(BoxLayout):
         del self.search_results.adapter.data[:]
         self.search_results.adapter.data.extend(cities)
         self.search_results._trigger_reset_populate()
-
-    def args_converter(self, index, data_item):
-        city, country = data_item
-        return{'location': (city, country)}
 
 class CurrentWeather(BoxLayout):
     location = ListProperty(['Long Beach', 'US'])
