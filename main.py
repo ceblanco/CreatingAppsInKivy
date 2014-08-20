@@ -5,6 +5,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.network.urlrequest import UrlRequest
 from kivy.uix.listview import ListItemButton
 from kivy.properties import ObjectProperty, ListProperty, StringProperty, NumericProperty
+from kivy.storage.jsonstore import JsonStore
 
 def locations_args_converter(index, data_item):
     city, country = data_item
@@ -17,6 +18,13 @@ class WeatherRoot(BoxLayout):
     current_weather = ObjectProperty()
     locations = ObjectProperty()
 
+    def __init__(self, **kwargs):
+        super(WeatherRoot, self).__init__(**kwargs)
+        self.store = JsonStore("weather_store.json")
+        if self.store.exists('locations'):
+            current_location = self.store.get("locations")['current_location']
+            self.show_current_weather(current_location)
+
     def show_current_weather(self, location=None):
         self.clear_widgets()
 
@@ -24,12 +32,16 @@ class WeatherRoot(BoxLayout):
             self.current_weather = CurrentWeather()
         if self.locations is None:
             self.locations = Factory.Locations()
+            if (self.store.exists('locations')):
+                locations = self.store.get("locations")['locations']
+                self.locations.locations_list.adapter.data.extend(locations)
 
         if location is not None:
             self.current_weather.location = location
             if location not in self.locations.locations_list.adapter.data:
                 self.locations.locations_list.adapter.data.append(location)
                 self.locations.locations_list._trigger_reset_populate()
+                self.store.put("locations", locations=list(self.locations.locations_list.adapter.data), current_location=location)
 
         self.current_weather.update_weather()
         self.add_widget(self.current_weather)
