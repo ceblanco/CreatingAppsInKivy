@@ -7,6 +7,7 @@ from kivy.network.urlrequest import UrlRequest
 from kivy.uix.listview import ListItemButton
 from kivy.properties import ObjectProperty, ListProperty, StringProperty, NumericProperty
 from kivy.storage.jsonstore import JsonStore
+from gesture_box import GestureBox
 
 def locations_args_converter(index, data_item):
     city, country = data_item
@@ -90,7 +91,7 @@ class AddLocationForm(BoxLayout):
         self.search_results.adapter.data.extend(cities)
         self.search_results._trigger_reset_populate()
 
-class CurrentWeather(BoxLayout):
+class CurrentWeather(GestureBox):
     location = ListProperty(['Long Beach', 'US'])
     conditions = StringProperty()
     conditions_image = StringProperty()
@@ -113,7 +114,7 @@ class CurrentWeather(BoxLayout):
         self.temp_min = data['main']['temp_min']
         self.temp_max = data['main']['temp_max']
 
-class Forecast(BoxLayout):
+class Forecast(GestureBox):
     location = ListProperty(['Long Beach', 'US'])
     forecast_container = ObjectProperty()
 
