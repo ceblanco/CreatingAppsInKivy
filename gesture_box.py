@@ -1,3 +1,4 @@
+from kivy.gesture import Gesture
 from kivy.gesture import GestureDatabase
 from kivy.uix.boxlayout import BoxLayout
 
@@ -24,5 +25,11 @@ class GestureBox(BoxLayout):
         super(GestureBox, self).on_touch_move(touch)
 
     def on_touch_up(self, touch):
-        print(touch.ud['gesture_path'])
+        if 'gesture_path' in touch.ud:
+            gesture = Gesture()
+            gesture.add_stroke(touch.ud['gesture_path'])
+            gesture.normalize()
+            match = gestures.find(gesture, minscore=0.90)
+            if match:
+                print('{} happened'.format(match[1].name))
         super(GestureBox, self).on_touch_up(touch)
