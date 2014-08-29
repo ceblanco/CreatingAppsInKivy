@@ -16,6 +16,20 @@ for name, gesture_string in gesture_strings.items():
     gestures.add_gesture(gesture)
 
 class GestureBox(BoxLayout):
+    def __init__(self, **kwargs):
+        for name in gesture_strings:
+            self.register_event_type('on_{}'.format(name))
+        super(GestureBox, self).__init__(**kwargs)
+
+    def on_left_to_right_line(self):
+        pass
+
+    def on_right_to_left_line(self):
+        pass
+
+    def on_bottom_to_top_line(self):
+        pass
+
     def on_touch_down(self, touch):
         touch.ud['gesture_path'] = [(touch.x, touch.y)]
         super(GestureBox, self).on_touch_down(touch)
@@ -31,5 +45,6 @@ class GestureBox(BoxLayout):
             gesture.normalize()
             match = gestures.find(gesture, minscore=0.90)
             if match:
-                print('{} happened'.format(match[1].name))
+                #print('{} happened'.format(match[1].name))
+                self.dispatch('on_{}'.format(match[1].name))
         super(GestureBox, self).on_touch_up(touch)
