@@ -16,6 +16,7 @@ class LocationButton(ListItemButton):
     location = ListProperty()
 
 class WeatherRoot(BoxLayout):
+    carousel = ObjectProperty()
     current_weather = ObjectProperty()
     locations = ObjectProperty()
     forecast = ObjectProperty()

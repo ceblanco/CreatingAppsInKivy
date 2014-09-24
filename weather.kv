@@ -4,7 +4,18 @@
 WeatherRoot: 
 
 <WeatherRoot>:
-    AddLocationForm
+    carousel: carousel
+    locations: locations
+    current_weather: current_weather
+    forecast: forecast
+    Carousel:
+        id: carousel
+        Locations:
+            id: locations
+        CurrentWeather:
+            id: current_weather
+        Forecast:
+            id: forecast
 
 <AddLocationForm>:
     orientation: "vertical"
@@ -85,10 +96,10 @@ WeatherRoot:
         height: "40dp"
         Button:
             text: "Locations"
-            on_press: app.root.show_locations()
+            on_press: app.root.carousel.load_slide(app.root.locations)
         Button:
             text: "Forecast"
-            on_press: app.root.show_forecast(root.location)
+            on_press: app.root.carousel.load_slide(app.root.forecast)
 
 <LocationButton>:
     text: "{} ({})".format(self.location[0], self.location[1])
@@ -138,4 +149,5 @@ WeatherRoot:
         height: "40dp"
         Button:
             text: "Current"
-            on_press: app.root.show_current_weather(root.location)
+#            on_press: app.root.show_current_weather(root.location)
+            on_press: app.root.carousel.load_slide(app.root.current_weather)
