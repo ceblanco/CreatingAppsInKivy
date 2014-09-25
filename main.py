@@ -93,7 +93,7 @@ class WeatherRoot(BoxLayout):
         self.store = JsonStore("weather_store.json")
         if self.store.exists('locations'):
             locations = self.store.get('locations')
-            self.locations.locations_list_adapter.data.extend(locations['locations'])
+            self.locations.locations_list.adapter.data.extend(locations['locations'])
             current_location = locations["current_location"]
             self.show_current_weather(current_location)
         else:
